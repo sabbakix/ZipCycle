@@ -18,8 +18,7 @@ for filepath in glob(base_dir + '*_metaDato.xml'):
 
 # Rileva la lista dei files nella directory
 files = []
-for ext in ('*.xml', '*.xml.p7m'):
-    files.extend(glob(join(base_dir, ext)))
+files.extend(glob(join(base_dir, '*.*')))
 
 print(files)
 
