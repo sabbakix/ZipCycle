@@ -19,7 +19,13 @@ print(files)
 
 # crea dei files zip di contenente al massimo 10 files xml
 counter = 1
+nfiles = len(files)
+counter_gruppo = 1
 for file in files:
+    gruppo = []
     print(counter, end=': ')
     print(file)
+    if counter %10 == 0 or counter == nfiles:
+        print ('gruppo:'+str(counter_gruppo)+' fine gruppo fai zip')
+        counter_gruppo += 1
     counter += 1
