@@ -9,8 +9,10 @@ print(CF)
 AP = input("Inserisci (A) per Fatture Attive (P) per passive: ") 
 print(AP) 
 
-# rimuovi i files di metadati
+#Directory di base
 base_dir = 'C://xdata/'
+
+# rimuovi i files di metadati
 for filepath in glob(base_dir + '*_metaDato.xml'):
     print(filepath)
     os.remove(filepath)
@@ -24,7 +26,7 @@ print(files)
 
 
 
-# crea dei files zip di contenente al massimo 10 files xml
+# crea dei files zip contenenti al massimo 10 files
 counter = 1
 nfiles = len(files)
 counter_gruppo = 1
