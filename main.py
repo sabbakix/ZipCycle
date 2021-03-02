@@ -20,8 +20,8 @@ tmp_dir = 'C://tmp/'
 
 # Ripulisci la dir temporanea
 for filepath in glob(tmp_dir + '*.*'):
-    print('Ripulisci la dir temporanea: ', end='')
-    print(filepath)
+    #print('Ripulisci la dir temporanea: ', end='')
+    #print(filepath)
     os.remove(filepath)
 
 
@@ -48,8 +48,8 @@ for file_zip in files_zip:
 
 # Rimuovi i files di metadati
 for filepath in glob(tmp_dir + '*_metaDato.xml'):
-    print('Rimuovi i files di metadati: ', end='')
-    print(filepath)
+    #print('Rimuovi i files di metadati: ', end='')
+    #print(filepath)
     os.remove(filepath)
 
 
