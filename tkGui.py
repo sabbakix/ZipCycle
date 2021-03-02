@@ -18,6 +18,8 @@ class App:
         root.geometry(alignstr)
         root.resizable(width=False, height=False)
 
+        self.item_num = 0
+
         self.menu = tk.Menu(root)
         root.config(menu=self.menu)
 
@@ -81,6 +83,17 @@ class App:
         self.avviaButton.place(x=660,y=360,width=111,height=30)
         self.avviaButton["command"] = self.eseguiAvviaButton
 
+
+        self.clearButton=tk.Button(root)
+        self.clearButton["bg"] = "#efefef"
+        ft = tkFont.Font(family='Times',size=10)
+        self.clearButton["font"] = ft
+        self.clearButton["fg"] = "#000000"
+        self.clearButton["justify"] = "center"
+        self.clearButton["text"] = "Pulisci"
+        self.clearButton.place(x=530,y=360,width=121,height=30)
+        self.clearButton["command"] = self.eseguiClearButton
+
         self.esciButton=tk.Button(root)
         self.esciButton["bg"] = "#efefef"
         ft = tkFont.Font(family='Times',size=10)
@@ -88,7 +101,7 @@ class App:
         self.esciButton["fg"] = "#000000"
         self.esciButton["justify"] = "center"
         self.esciButton["text"] = "Esci"
-        self.esciButton.place(x=530,y=360,width=121,height=30)
+        self.esciButton.place(x=400,y=360,width=121,height=30)
         self.esciButton["command"] = self.eseguiEsciButton
 
         
@@ -109,12 +122,23 @@ class App:
 
     def eseguiAvviaButton(self):
 
-        for x in range(1000):
-            self.listbox01.insert(x, x)
+        for x in range(10):
+            self.consolePrint(str(x)+"hello")
 
         print("Avvia Button")
     
+    def consolePrint(self,text=""):
+        output = str(self.item_num).zfill(3)+": "+text
+        self.listbox01.insert(self.item_num, output)
+        self.listbox01.see(self.item_num)
+        self.item_num += 1
+        
 
+    def eseguiClearButton(self):
+        print("Clearing ...")
+        self.listbox01.delete(0,self.item_num)
+        self.item_num = 0
+    
     def eseguiEsciButton(self):
         print("Closing ...")
         exit()
