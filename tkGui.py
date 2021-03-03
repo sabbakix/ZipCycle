@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.font as tkFont
-from tkinter import filedialog
+import tkinter.filedialog
+import tkinter.messagebox
 
 
 class App:
@@ -106,7 +107,6 @@ class App:
 
         
 
-
         
 
     def selDir01(self):
@@ -116,7 +116,7 @@ class App:
         print("dir: ",dirName)
 
     def showMessage(self):
-        tk.alert.showinfo('Messaggio','testo del messaggio')
+        tk.messagebox.showinfo('Messaggio','testo del messaggio')
         print("showMessage")
 
 
