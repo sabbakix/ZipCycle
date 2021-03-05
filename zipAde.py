@@ -1,4 +1,13 @@
+"""
+zipAde Interfaccia principale.
+
+"""
+
+
 import sys
+import tempfile
+
+#tkinter library
 import tkinter as tk
 import tkinter.font as tkFont
 import tkinter.filedialog
@@ -7,6 +16,8 @@ import tkinter.messagebox
 
 
 class App:
+
+    temp_dir = tempfile.TemporaryDirectory()
 
     def __init__(self, root):
 
@@ -208,6 +219,12 @@ verranno lette le fatture negli zip e rezippate in pacchetti da 10 fatture.')
             self.consolePrint(str(x)+"hello")
 
         print("Avvia Button")
+
+        
+        print(self.temp_dir.name)
+        # use temp_dir
+        print('dir temparanea')
+        
     
     def consolePrint(self,text=""):
         output = str(self.item_num).zfill(3)+": "+text
@@ -223,6 +240,7 @@ verranno lette le fatture negli zip e rezippate in pacchetti da 10 fatture.')
     
     def eseguiEsciButton(self):
         print("Closing ...")
+        self.temp_dir.cleanup()
         sys.exit()
     
 
