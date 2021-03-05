@@ -160,7 +160,7 @@ class App:
         self.cfentry02["fg"] = "#333333"
         self.cfentry02["justify"] = "left"
         self.cfentry02["text"] = "CF"
-        self.cfentry02.place(x=140,y=50,width=340,height=25)
+        self.cfentry02.place(x=140,y=50,width=300,height=25)
 
         self.flagZip = tk.IntVar()
         self.checkbutton01=tk.Checkbutton(root, variable=self.flagZip)
@@ -168,8 +168,8 @@ class App:
         self.checkbutton01["font"] = ft
         self.checkbutton01["fg"] = "#333333"
         self.checkbutton01["justify"] = "center"
-        self.checkbutton01["text"] = "  File di origine è  zip"
-        self.checkbutton01.place(x=330,y=50,width=198,height=30)
+        self.checkbutton01["text"] = " File di origine è zip"
+        self.checkbutton01.place(x=600,y=48,width=198,height=30)
         self.checkbutton01["offvalue"] = "0"
         self.checkbutton01["onvalue"] = "1"
         self.checkbutton01["command"] = self.checkbutton01_command
@@ -180,7 +180,7 @@ class App:
         self.apradiobutton01["fg"] = "#333333"
         self.apradiobutton01["justify"] = "center"
         self.apradiobutton01["text"] = "Attive"
-        self.apradiobutton01.place(x=520,y=55,width=85,height=25)
+        self.apradiobutton01.place(x=430,y=50,width=85,height=25)
         self.apradiobutton01["value"] = "Attive"
         self.apradiobutton01["command"] = self.apradiobutton01_command
 
@@ -191,7 +191,7 @@ class App:
         self.apradiobutton02["justify"] = "center"
         self.apradiobutton02["text"] = "Passive"
         self.apradiobutton02["relief"] = "flat"
-        self.apradiobutton02.place(x=600,y=55,width=85,height=25)
+        self.apradiobutton02.place(x=510,y=50,width=85,height=25)
         self.apradiobutton02["value"] = "Passive"
         self.apradiobutton02["command"] = self.apradiobutton02_command
 
@@ -202,12 +202,14 @@ class App:
         self.textbox01["relief"] = "groove"
         self.textbox01.place(x=11,y=120,width=760,height=322)
         self.textbox01.insert(tk.INSERT, 
-"Selezionare la cartella in cui è presente lo zip delle fatture, scaricato dalla funzione massiva.\n\
+"Selezionare la cartella in cui è presente lo zip delle fatture, scaricato dalla funzione massiva, o le fatture singole.\n\
 Inserire il campo Codice Fiscale (puoi usare la combinazione di tasti (Ctrl+V) per incollare).\n\
 Seleziona il flag Attive se si tratta di fatture Attive o Passive se si tratta di fatture passive,\nquesto influisce solo sul nome degli zip finali.\n\
+Mettere il Flag su il <file di origine è zip> se si acquisisce lo zip delle fatture, scaricato dalla funzione massiva. \n\
+Mentre togliere il Flag il <file di origine è zip> se nella cartella selezionata vi sono i files fatture non zippate.\n\
 Quindi premere Avvia per creare degli zip conteneti 10 fatture ciascuno.\n\n")
-        self.textbox01.configure(state=tk.DISABLED)
-        
+
+        self.textbox01.configure(state=tk.DISABLED)       
         self.scrollbar02 = tk.Scrollbar(self.textbox01) 
         self.scrollbar02.pack(side = tk.RIGHT, fill = tk.Y)
         self.scrollbar02.config(command = self.textbox01.yview) 
@@ -302,15 +304,24 @@ verranno lette le fatture negli zip e rezippate in pacchetti da 10 fatture.')
         else:
             filesFte = []
             filesFte.extend(glob(join(self.base_dir, '*.*')))
+
+            cfilesFte = []
+            cfilesFte.extend(glob(join(self.base_dir, '*.zip')))
+
             if len(filesFte) == 0:
                 self.dprint("Nessun File Fattura trovato nella cartella selezionata.")
                 return self.temp_dir.cleanup()
             else:
-                # Copia i files fattura nella dir temporanea
-                for fileFte in filesFte:
-                    print('Copia i files fattura: ', end='')
-                    print(fileFte)
-                    copy2(fileFte, self.temp_dir.name+'/')
+                if len(cfilesFte) == 0:
+                    # Copia i files fattura nella dir temporanea
+                    for fileFte in filesFte:
+                        print('Copia i files fattura: ', end='')
+                        print(fileFte)
+                        copy2(fileFte, self.temp_dir.name+'/')
+                else:
+                    self.dprint("Attenzione. Si è in modalita acquisizione fatture singole ma \n\
+la cartella selezionata contiene dei files zip\n\
+mettere il flag 'file di origine è zip' se si vuole acquisirlo in modalita di acquisizione zip")
         print("fine")
 
         
