@@ -236,6 +236,8 @@ verranno lette le fatture negli zip e rezippate in pacchetti da 10 fatture.')
         self.temp_dir = tempfile.TemporaryDirectory()
         print(self.temp_dir.name)
 
+        self.dprint ("")
+
         # Controllo che la dir temporanea sia vuota
         for filepath in glob(self.temp_dir.name + '*.*'):
             print('Controllo che la dir temporanea sia vuota: ', end='')
@@ -272,7 +274,7 @@ verranno lette le fatture negli zip e rezippate in pacchetti da 10 fatture.')
         # Rimuovi i files di metadati
         for filepath in glob(self.temp_dir.name + '\*_metaDato.xml'):
             self.dprint('Ignora file di metadati: ', end='')
-            self.dprint(filepath)
+            self.dprint(os.path.basename(filepath))
             os.remove(filepath)
 
         self.dprint ("")
@@ -296,7 +298,7 @@ verranno lette le fatture negli zip e rezippate in pacchetti da 10 fatture.')
 
         for file in files:
             self.dprint(counter, end=': ')
-            self.dprint(file)
+            self.dprint(os.path.basename(file))
             gruppo.append(file)
 
             if counter %10 == 0 or counter == nfiles:
@@ -309,7 +311,7 @@ verranno lette le fatture negli zip e rezippate in pacchetti da 10 fatture.')
                     #self.dprint(str(os.path.basename(file_nel_gruppo)))
                     ziph.write(file_nel_gruppo,os.path.basename(file_nel_gruppo))
                 ziph.close()
-                self.dprint ('inserite nel file: '+str(counter_gruppo)+' zip : '+nome_file_zip)
+                self.dprint (" ===============================> Inserite nel file: "+str(counter_gruppo)+' zip : '+nome_file_zip)
                 self.dprint ("")
                 gruppo = []
                 counter_gruppo += 1
