@@ -21,7 +21,7 @@ import tkinter.messagebox
 
 class App:
 
-    base_dir = "C:/xdata"
+    base_dir = ""
     temp_dir = 0
 
     CF = ""
@@ -180,12 +180,16 @@ class App:
         self.apradiobutton02["command"] = self.apradiobutton02_command
 
         self.textbox01=tk.Text(root)
-        ft = tkFont.Font(family='Times',size=10)
+        ft = tkFont.Font(family='Arial',size=11)
         self.textbox01["font"] = ft
         self.textbox01["fg"] = "#333333"
         self.textbox01["relief"] = "groove"
         self.textbox01.place(x=11,y=120,width=760,height=322)
-        self.textbox01.insert(tk.INSERT, "Seleziona la cartella con le fatture, compila il campo Codice Fiscale, e premi Avvia\n")
+        self.textbox01.insert(tk.INSERT, 
+"Selezionare la cartella in cui è presente lo zip delle fatture, scaricato dalla funzione massiva.\n\
+Inserire il campo Codice Fiscale (puoi usare la combinazione di tasti (Ctrl+V) per incollare).\n\
+Seleziona il flag Attive se si tratta di fatture Attive o Passive se si tratta di fatture passive,\nquesto influisce solo sul nome degli zip finali.\n\
+Quindi premere Avvia per creare degli zip conteneti 10 fatture ciascuno.\n\n")
         self.textbox01.configure(state=tk.DISABLED)
         
         self.scrollbar02 = tk.Scrollbar(self.textbox01) 
@@ -217,7 +221,7 @@ class App:
         self.entry01.configure(state=tk.DISABLED)
 
     def showMessage(self):
-        tk.messagebox.showinfo('Messaggio','Selezionare la cartella in cui ci sono le fatture. \
+        tk.messagebox.showinfo('Messaggio','Selezionare la cartella in cui è presente lo zip delle fatture. \
 Le fatture devono essere in uno o piu zip. Cliccando il pulsant avvia \
 verranno lette le fatture negli zip e rezippate in pacchetti da 10 fatture.')
         print("showMessage")
@@ -248,7 +252,7 @@ verranno lette le fatture negli zip e rezippate in pacchetti da 10 fatture.')
 
         #Verifica cartella selezionata 
         if self.base_dir == "":
-            self.dprint("Nessuna cartella selezionata.")
+            self.dprint("Nessuna cartella selezionata. Usa il pulsante Seleziona Cartella per indicare la cartella che contiene lo zip delle fatture.")
             return self.temp_dir.cleanup()
         
         # Verifica CF
@@ -273,6 +277,12 @@ verranno lette le fatture negli zip e rezippate in pacchetti da 10 fatture.')
 
         # Rimuovi i files di metadati
         for filepath in glob(self.temp_dir.name + '\*_metaDato.xml'):
+            self.dprint('Ignora file di metadati: ', end='')
+            self.dprint(os.path.basename(filepath))
+            os.remove(filepath)
+            
+        # Rimuovi i files di metadati
+        for filepath in glob(self.temp_dir.name + '\*informazioni_associate*.xml'):
             self.dprint('Ignora file di metadati: ', end='')
             self.dprint(os.path.basename(filepath))
             os.remove(filepath)
