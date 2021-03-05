@@ -10,6 +10,9 @@ from os.path import join
 from glob import glob
 import zipfile
 import tempfile
+from shutil import copy2
+
+
 
 #tkinter library
 import tkinter as tk
@@ -25,9 +28,8 @@ class App:
     temp_dir = 0
 
     CF = ""
-    origineZip = False
     AP = ""
-
+    flagZip = 0
 
 
     def __init__(self, root):
@@ -81,9 +83,22 @@ class App:
         self.entry01["relief"] = "flat"
         self.entry01["borderwidth"] = 2
         self.entry01["relief"] = "groove"
-        self.entry01.place(x=140,y=10,width=630,height=30)
+        self.entry01.place(x=140,y=10,width=600,height=30)
         self.entry01.configure(state=tk.DISABLED)
         self.entry01.config(fg = 'blue')
+
+
+
+        #self.linkbutton01 = tk.Button(root, text="Apri", fg="red", font=("Ariel", 9, "bold"), command=self.open)
+        self.linkbutton01=tk.Button(root)
+        self.linkbutton01["bg"] = "#efefef"
+        ft = tkFont.Font(family='Times',size=9)
+        self.linkbutton01["font"] = ft
+        self.linkbutton01["fg"] = "#000000"
+        self.linkbutton01["justify"] = "center"
+        self.linkbutton01["text"] = "Apri"
+        self.linkbutton01.place(x=750,y=10,width=40,height=28)
+        self.linkbutton01["command"] = self.open
 
         self.listbox01=tk.Listbox(root)
         self.listbox01["borderwidth"] = "1px"
@@ -147,7 +162,8 @@ class App:
         self.cfentry02["text"] = "CF"
         self.cfentry02.place(x=140,y=50,width=340,height=25)
 
-        self.checkbutton01=tk.Checkbutton(root)
+        self.flagZip = tk.IntVar()
+        self.checkbutton01=tk.Checkbutton(root, variable=self.flagZip)
         ft = tkFont.Font(family='Times',size=10)
         self.checkbutton01["font"] = ft
         self.checkbutton01["fg"] = "#333333"
@@ -207,7 +223,15 @@ Quindi premere Avvia per creare degli zip conteneti 10 fatture ciascuno.\n\n")
 
 
     def checkbutton01_command(self):
-        self.origineZip = True
+        print("self.flagZip: ", end="")
+        print(self.flagZip.get())
+
+    def open(self):
+        if len(self.base_dir)==0:
+            self.dprint("Nessuna cartella Selezionata")
+        else:
+            print("open dir:"+self.base_dir)
+            os.system("start "+self.base_dir)
 
         
 
@@ -260,20 +284,36 @@ verranno lette le fatture negli zip e rezippate in pacchetti da 10 fatture.')
             self.dprint("Nessun Codice Fiscale inserito.")
             return self.temp_dir.cleanup()
 
+        print("inizio")
+        # Rileva la lista dei files nella directory selezionata sia zip che fatture  singole
+        if self.flagZip.get() == 1:
+            files_zip = []
+            files_zip.extend(glob(join(self.base_dir, '*.zip')))
+            if len(files_zip) == 0:
+                self.dprint("Nessun File Zip trovato nella cartella selezionata.")
+                return self.temp_dir.cleanup()
+            else:
+                # Estrai i files Zip nella dir temporanea
+                for file_zip in files_zip:
+                    print('Estrai i files Zip: ', end='')
+                    print(file_zip)
+                    with zipfile.ZipFile(file_zip,"r") as zip_ref:
+                        zip_ref.extractall(self.temp_dir.name)
+        else:
+            filesFte = []
+            filesFte.extend(glob(join(self.base_dir, '*.*')))
+            if len(filesFte) == 0:
+                self.dprint("Nessun File Fattura trovato nella cartella selezionata.")
+                return self.temp_dir.cleanup()
+            else:
+                # Copia i files fattura nella dir temporanea
+                for fileFte in filesFte:
+                    print('Copia i files fattura: ', end='')
+                    print(fileFte)
+                    copy2(fileFte, self.temp_dir.name+'/')
+        print("fine")
 
-        # Rileva la lista dei files nella directory dati
-        files_zip = []
-        files_zip.extend(glob(join(self.base_dir, '*.zip')))
-        if len(files_zip) == 0:
-            self.dprint("Nessun File Zip trovato nella cartella selezionata.")
-            return self.temp_dir.cleanup()
-
-        # Estrai i files Zip nella dir temporanea
-        for file_zip in files_zip:
-            print('Estrai i files Zip: ', end='')
-            print(file_zip)
-            with zipfile.ZipFile(file_zip,"r") as zip_ref:
-                zip_ref.extractall(self.temp_dir.name)
+        
 
         # Rimuovi i files di metadati
         for filepath in glob(self.temp_dir.name + '\*_metaDato.xml'):
